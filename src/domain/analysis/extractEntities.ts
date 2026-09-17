@@ -1,4 +1,4 @@
-import type { InputType, PixInfo, PixKeyType, UrlInfo } from './types';
+import type { InputOrigin, InputType, PixInfo, PixKeyType, UrlInfo } from './types';
 
 const shortenerDomains = new Set([
   'bit.ly',
@@ -87,7 +87,16 @@ function extractPixInfo(text: string): PixInfo | undefined {
   };
 }
 
-function detectType(text: string, url: UrlInfo | undefined, pix: PixInfo | undefined): InputType {
+function detectType(
+  text: string,
+  origin: InputOrigin,
+  url: UrlInfo | undefined,
+  pix: PixInfo | undefined,
+): InputType {
+  if (origin === 'qrCode') {
+    return 'qrCode';
+  }
+
   if (pix) {
     return 'chavePix';
   }
@@ -110,10 +119,10 @@ export interface ExtractedEntities {
   phone?: string;
 }
 
-export function extractEntities(text: string): ExtractedEntities {
+export function extractEntities(text: string, origin: InputOrigin): ExtractedEntities {
   const url = extractUrl(text);
   const pix = extractPixInfo(text);
-  const type = detectType(text, url, pix);
+  const type = detectType(text, origin, url, pix);
 
   return {
     type,

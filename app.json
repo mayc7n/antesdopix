@@ -19,7 +19,15 @@
       "package": "com.antesdopix.app",
       "minSdkVersion": 24
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permita o acesso à câmera somente para escanear um QR Code antes do pagamento."
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true

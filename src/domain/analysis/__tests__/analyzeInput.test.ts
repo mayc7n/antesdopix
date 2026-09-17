@@ -91,4 +91,11 @@ describe('analyzeInput', () => {
     expect(analysis).not.toHaveProperty('input.rawText');
     expect(JSON.stringify(analysis)).not.toContain('Última chance');
   });
+
+  it('preserva QR Code como origem própria sem iniciar pagamento', () => {
+    const analysis = analyzeInput('00020126580014BR.GOV.BCB.PIX', 'qrCode');
+
+    expect(analysis.input.origin).toBe('qrCode');
+    expect(analysis.input.type).toBe('qrCode');
+  });
 });

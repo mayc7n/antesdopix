@@ -61,7 +61,7 @@ export default function HomeScreen() {
             label="Escanear QR Code"
             icon="scan-outline"
             variant="secondary"
-            onPress={() => futureMessage('A leitura de QR Code')}
+            onPress={() => router.push('/scanner')}
           />
         </View>
 

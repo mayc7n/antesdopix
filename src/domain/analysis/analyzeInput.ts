@@ -32,7 +32,7 @@ function classifyRisk(signalCount: number, hasHighSeverity: boolean): RiskLevel 
 
 export function analyzeInput(text: string, origin: InputOrigin): AnalysisResult {
   const normalizedText = normalizeText(text);
-  const extractedEntities = extractEntities(text);
+  const extractedEntities = extractEntities(text, origin);
   const signals = findRiskSignals(normalizedText, extractedEntities);
   const level = classifyRisk(
     signals.length,
