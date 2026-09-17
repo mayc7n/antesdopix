@@ -7,17 +7,24 @@
     "scheme": "antesdopix",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
-    "platforms": ["android", "ios"],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "ios": {
       "supportsTablet": true,
-      "deploymentTarget": "16.4"
+      "deploymentTarget": "16.4",
+      "bundleIdentifier": "com.antesdopix.app"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#0B1324"
       },
       "package": "com.antesdopix.app",
-      "minSdkVersion": 24
+      "minSdkVersion": 24,
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -35,7 +42,9 @@
             "NSExtensionActivationSupportsText": true,
             "NSExtensionActivationSupportsWebURLWithMaxCount": 1
           },
-          "androidIntentFilters": ["text/*"]
+          "androidIntentFilters": [
+            "text/*"
+          ]
         }
       ]
     ],
