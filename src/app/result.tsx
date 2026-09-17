@@ -80,6 +80,12 @@ export default function ResultScreen() {
         </View>
 
         <AppButton
+          label="Ver detalhes dos sinais"
+          icon="information-circle-outline"
+          variant="secondary"
+          onPress={() => router.push('/details')}
+        />
+        <AppButton
           label="Compartilhar resumo"
           icon="share-social-outline"
           variant="secondary"
