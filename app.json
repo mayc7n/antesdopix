@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Antes do Pix",
+    "slug": "antes-do-pix",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "antesdopix",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "platforms": ["android", "ios"],
+    "ios": {
+      "supportsTablet": true,
+      "deploymentTarget": "16.4"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1324"
+      },
+      "package": "com.antesdopix.app",
+      "minSdkVersion": 24
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    }
+  }
+}
