@@ -1,0 +1,31 @@
+name: Verificar app
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Typecheck, testes e export
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Validar tipos e testes
+        run: npm run check
+
+      - name: Validar export nativo
+        run: npx expo export --platform android --platform ios
