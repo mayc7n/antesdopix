@@ -74,6 +74,12 @@ export default function HomeScreen() {
             </Text>
           </View>
         </View>
+        <AppButton
+          label="Ler sobre privacidade"
+          variant="quiet"
+          icon="lock-closed-outline"
+          onPress={() => router.push('/privacy')}
+        />
       </ScrollView>
     </SafeAreaView>
   );

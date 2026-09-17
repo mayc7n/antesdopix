@@ -67,6 +67,12 @@ export default function ResultScreen() {
         </View>
 
         <AppButton label="Fazer nova análise" icon="refresh-outline" onPress={handleNewAnalysis} />
+        <AppButton
+          label="Denunciar golpe"
+          icon="megaphone-outline"
+          variant="secondary"
+          onPress={() => router.push('/report')}
+        />
       </ScrollView>
     </SafeAreaView>
   );
