@@ -12,7 +12,7 @@ Este checkpoint entrega o fluxo manual local:
 
 A análise é determinística, funciona sem internet e guarda o texto somente em memória durante o fluxo. O app não acessa banco, carteira ou conta, não solicita senha e não inicia pagamentos.
 
-Compartilhamento nativo e leitura de QR Code serão adicionados em checkpoints seguintes. Não há garantia de segurança: o resultado serve para ajudar a pessoa a pausar e confirmar o beneficiário no aplicativo do banco.
+O app recebe texto e links pelo menu nativo de compartilhamento do Android e pela Share Extension do iOS. Essa integração exige um development build; o Expo Go não carrega módulos nativos de compartilhamento. Não há garantia de segurança: o resultado serve para ajudar a pessoa a pausar e confirmar o beneficiário no aplicativo do banco.
 
 ## Desenvolvimento
 
@@ -42,4 +42,4 @@ O app não confirma titularidade bancária, não registra denúncias automaticam
 
 ## Stack
 
-Expo SDK 57, React Native, TypeScript, Expo Router, Zustand, Zod e Jest.
+Expo SDK 57, React Native, TypeScript, Expo Router, Zustand, Zod, Jest, expo-camera e expo-share-intent.

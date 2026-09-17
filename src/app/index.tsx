@@ -49,7 +49,7 @@ export default function HomeScreen() {
             label="Compartilhar mensagem"
             icon="share-social-outline"
             variant="secondary"
-            onPress={() => futureMessage('O compartilhamento nativo')}
+            onPress={() => futureMessage('O compartilhamento nativo já está disponível; selecione o Antes do Pix no menu de outro app.')}
           />
           <AppButton
             label="Inserir link, telefone ou chave Pix"

@@ -24,7 +24,18 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Permita o acesso à câmera somente para escanear um QR Code antes do pagamento."
+          "cameraPermission": "Permita o acesso à câmera somente para escanear um QR Code antes do pagamento.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-share-intent",
+        {
+          "iosActivationRules": {
+            "NSExtensionActivationSupportsText": true,
+            "NSExtensionActivationSupportsWebURLWithMaxCount": 1
+          },
+          "androidIntentFilters": ["text/*"]
         }
       ]
     ],
