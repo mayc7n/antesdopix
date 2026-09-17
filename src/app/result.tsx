@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppButton } from '@/components/AppButton';
@@ -23,6 +23,19 @@ export default function ResultScreen() {
   const handleNewAnalysis = () => {
     clearAnalysis();
     router.replace('/');
+  };
+
+  const handleShareSummary = () => {
+    const summary = [
+      'Antes do Pix — resumo da análise',
+      `Classificação: ${analysis.result.level}`,
+      '',
+      ...analysis.result.signals.map((signal) => `• ${signal.title}`),
+      '',
+      'Este resultado não garante que o pagamento seja seguro. Confirme o beneficiário no aplicativo do seu banco.',
+    ].join('\n');
+
+    void Share.share({ message: summary });
   };
 
   return (
@@ -66,6 +79,12 @@ export default function ResultScreen() {
           ))}
         </View>
 
+        <AppButton
+          label="Compartilhar resumo"
+          icon="share-social-outline"
+          variant="secondary"
+          onPress={handleShareSummary}
+        />
         <AppButton label="Fazer nova análise" icon="refresh-outline" onPress={handleNewAnalysis} />
         <AppButton
           label="Denunciar golpe"
