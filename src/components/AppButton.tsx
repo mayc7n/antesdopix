@@ -53,7 +53,7 @@ export function AppButton({
       >
         {label}
       </Text>
-      <View style={styles.labelSpacer} />
+      {icon ? <View style={styles.labelSpacer} /> : null}
     </Pressable>
   );
 }
