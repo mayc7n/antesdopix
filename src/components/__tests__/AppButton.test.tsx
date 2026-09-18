@@ -10,4 +10,19 @@ describe('AppButton', () => {
 
     expect(screen.getByRole('button', { name: 'Voltar' }).children).toHaveLength(1);
   });
+
+  it('expõe uma dica opcional para tecnologias assistivas', async () => {
+    const screen = await render(
+      <AppButton
+        label="Voltar"
+        accessibilityHint="Retorna para a tela anterior"
+        variant="quiet"
+        onPress={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Voltar' }).props.accessibilityHint).toBe(
+      'Retorna para a tela anterior',
+    );
+  });
 });

@@ -10,6 +10,7 @@ interface AppButtonProps {
   label: string;
   onPress: () => void;
   icon?: keyof typeof Ionicons.glyphMap;
+  accessibilityHint?: string;
   variant?: ButtonVariant;
   disabled?: boolean;
 }
@@ -18,6 +19,7 @@ export function AppButton({
   label,
   onPress,
   icon,
+  accessibilityHint,
   variant = 'primary',
   disabled = false,
 }: AppButtonProps) {
@@ -28,6 +30,7 @@ export function AppButton({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
