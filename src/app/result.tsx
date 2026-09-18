@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppButton } from '@/components/AppButton';
 import { RiskBadge } from '@/components/RiskBadge';
 import { SignalCard } from '@/components/SignalCard';
+import { formatAnalysisSummary } from '@/share/formatAnalysisSummary';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 import { useAnalysisStore } from '@/state/analysisStore';
@@ -26,16 +27,7 @@ export default function ResultScreen() {
   };
 
   const handleShareSummary = () => {
-    const summary = [
-      'Antes do Pix — resumo da análise',
-      `Classificação: ${analysis.result.level}`,
-      '',
-      ...analysis.result.signals.map((signal) => `• ${signal.title}`),
-      '',
-      'Este resultado não garante que o pagamento seja seguro. Confirme o beneficiário no aplicativo do seu banco.',
-    ].join('\n');
-
-    void Share.share({ message: summary });
+    void Share.share({ message: formatAnalysisSummary(analysis) });
   };
 
   return (
