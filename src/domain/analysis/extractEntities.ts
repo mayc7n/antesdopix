@@ -77,7 +77,7 @@ function extractPixInfo(text: string): PixInfo | undefined {
     return undefined;
   }
 
-  const candidate = pixMarker[1].replace(/[.)]+$/, '');
+  const candidate = pixMarker[1].replace(/[.!?)}\]]+$/, '');
 
   return {
     keyType: getPixKeyType(candidate),

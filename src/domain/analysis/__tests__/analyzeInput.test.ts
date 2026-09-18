@@ -82,6 +82,12 @@ describe('analyzeInput', () => {
     expect(JSON.stringify(analysis)).not.toContain('Chave Pix: 1234');
   });
 
+  it('remove pontuação final antes de mascarar uma chave Pix', () => {
+    const analysis = analyzeInput('Chave Pix: 1234!', 'manual');
+
+    expect(analysis.input.pix?.maskedKey).toBe('***1234');
+  });
+
   it('identifica pressão emocional e pedido para esconder a operação', () => {
     const analysis = analyzeInput(
       'Seu filho está em perigo. Não conte para ninguém e transfira agora.',
