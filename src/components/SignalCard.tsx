@@ -23,6 +23,7 @@ export function SignalCard({ signal }: SignalCardProps) {
     <View
       accessible
       accessibilityRole="text"
+      accessibilityLabel={`${signal.title}. ${signal.explanation}`}
       style={styles.card}
     >
       <View style={styles.iconWrap}>
