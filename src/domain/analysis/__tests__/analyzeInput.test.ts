@@ -41,6 +41,14 @@ describe('analyzeInput', () => {
     expect(JSON.stringify(analysis)).not.toContain('código SMS agora');
   });
 
+  it('identifica palavras de risco separadas por caracteres invisíveis', () => {
+    const analysis = analyzeInput('Envie sua s\u200Benha agora.', 'manual');
+
+    expect(analysis.result.signals.map((signal) => signal.code)).toContain(
+      'pedidoDeSegredo',
+    );
+  });
+
   it('identifica link inseguro e encurtador sem acessar a internet', () => {
     const analysis = analyzeInput('http://bit.ly/pague-agora', 'manual');
 
