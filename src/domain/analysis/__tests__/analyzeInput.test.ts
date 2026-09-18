@@ -69,6 +69,15 @@ describe('analyzeInput', () => {
     );
   });
 
+  it('reconhece encurtador mesmo com o prefixo www', () => {
+    const analysis = analyzeInput('https://www.bit.ly/pague-agora', 'manual');
+
+    expect(analysis.input.url).toMatchObject({
+      domain: 'www.bit.ly',
+      isShortener: true,
+    });
+  });
+
   it('identifica uma chave Pix incompatível e mascara o trecho exibido', () => {
     const analysis = analyzeInput('Chave Pix: 1234', 'manual');
 

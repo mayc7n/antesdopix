@@ -22,6 +22,7 @@ function extractUrl(text: string): UrlInfo | undefined {
 
   const scheme = match[2]?.toLowerCase() === 'http' ? 'http' : 'https';
   const domain = match[3]?.toLowerCase() ?? '';
+  const comparableDomain = domain.replace(/^www\./, '');
 
   if (!domain) {
     return undefined;
@@ -30,7 +31,7 @@ function extractUrl(text: string): UrlInfo | undefined {
   return {
     domain,
     scheme,
-    isShortener: shortenerDomains.has(domain),
+    isShortener: shortenerDomains.has(comparableDomain),
   };
 }
 
