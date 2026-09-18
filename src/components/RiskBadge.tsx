@@ -25,6 +25,7 @@ export function RiskBadge({ level }: RiskBadgeProps) {
       accessible
       accessibilityRole="text"
       accessibilityLabel={`${config.title}. O resultado não garante segurança.`}
+      accessibilityHint="Confira os sinais antes de pagar."
       style={[styles.badge, { borderColor: config.color }]}
     >
       <Ionicons name={config.icon} size={22} color={config.color} />
