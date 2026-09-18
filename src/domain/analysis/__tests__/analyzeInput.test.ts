@@ -28,6 +28,12 @@ describe('analyzeInput', () => {
     expect(analysis.result.level).toBe('atencao');
   });
 
+  it('reconhece sinais quando a pontuação separa as palavras', () => {
+    const analysis = analyzeInput('Pague, agora!', 'manual');
+
+    expect(analysis.result.signals.map((signal) => signal.code)).toContain('urgencia');
+  });
+
   it('identifica pedidos de senha e códigos e classifica como possível golpe', () => {
     const analysis = analyzeInput(
       'Envie sua senha e o código SMS agora para liberar sua conta.',
