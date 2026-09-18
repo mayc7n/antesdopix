@@ -82,6 +82,13 @@ describe('analyzeInput', () => {
     expect(JSON.stringify(analysis)).not.toContain('Chave Pix: 1234');
   });
 
+  it('reconhece telefone com pontos e hífen', () => {
+    const analysis = analyzeInput('11.99999-9999', 'manual');
+
+    expect(analysis.input.type).toBe('telefone');
+    expect(analysis.input.phone).toBe('11.99999-9999');
+  });
+
   it('remove pontuação final antes de mascarar uma chave Pix', () => {
     const analysis = analyzeInput('Chave Pix: 1234!', 'manual');
 

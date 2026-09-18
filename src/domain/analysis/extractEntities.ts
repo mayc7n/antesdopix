@@ -9,7 +9,7 @@ const shortenerDomains = new Set([
 ]);
 
 const urlPattern = /((https?):\/\/|www\.)([^\s/]+)([^\s]*)/i;
-const phonePattern = /^(?:\+?55\s?)?(?:\(?\d{2}\)?\s?)?\d{4,5}[\s-]?\d{4}$/;
+const phonePattern = /^(?:\+?55[\s.-]?)?(?:\(?\d{2}\)?[\s.-]?)?\d{4,5}[\s.-]?\d{4}$/;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const randomKeyPattern = /^[a-f0-9-]{32,36}$/i;
 
