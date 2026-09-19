@@ -98,6 +98,40 @@ describe('analyzeInput', () => {
     expect(analysis.input.phone).toBe('11.99999-9999');
   });
 
+  it('reconhece telefone usado explicitamente como chave Pix', () => {
+    const analysis = analyzeInput('Chave Pix: 11999999999', 'manual');
+
+    expect(analysis.input.type).toBe('chavePix');
+    expect(analysis.input.pix).toMatchObject({
+      keyType: 'telefone',
+      maskedKey: '***9999',
+    });
+  });
+
+  it('reconhece CPF e CNPJ válidos como chaves Pix', () => {
+    const cpfAnalysis = analyzeInput('Chave Pix: 52998224725', 'manual');
+    const cnpjAnalysis = analyzeInput('Chave Pix: 11222333000181', 'manual');
+
+    expect(cpfAnalysis.input.pix?.keyType).toBe('cpf');
+    expect(cnpjAnalysis.input.pix?.keyType).toBe('cnpj');
+  });
+
+  it('interpreta dados básicos de um QR Code Pix estático', () => {
+    const analysis = analyzeInput(
+      '00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-426614174000520400005303986540510.005802BR5913FULANO DE TAL6008BRASILIA62070503***6304ABCD',
+      'qrCode',
+    );
+
+    expect(analysis.input.type).toBe('qrCode');
+    expect(analysis.input.pix).toMatchObject({
+      keyType: 'aleatoria',
+      maskedKey: '***4000',
+      statedBeneficiary: 'FULANO DE TAL',
+      value: 10,
+      merchantCity: 'BRASILIA',
+    });
+  });
+
   it('remove pontuação final antes de mascarar uma chave Pix', () => {
     const analysis = analyzeInput('Chave Pix: 1234!', 'manual');
 

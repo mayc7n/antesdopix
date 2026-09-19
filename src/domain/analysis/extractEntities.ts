@@ -1,4 +1,5 @@
 import type { InputOrigin, InputType, PixInfo, PixKeyType, UrlInfo } from './types';
+import { parsePixPayload } from './parsePixPayload';
 
 const shortenerDomains = new Set([
   'bit.ly',
@@ -48,11 +49,11 @@ function maskKey(value: string): string {
 function getPixKeyType(value: string): PixKeyType {
   const digits = value.replace(/\D/g, '');
 
-  if (digits.length === 11) {
+  if (isValidCpf(digits)) {
     return 'cpf';
   }
 
-  if (digits.length === 14) {
+  if (isValidCnpj(digits)) {
     return 'cnpj';
   }
 
@@ -71,21 +72,89 @@ function getPixKeyType(value: string): PixKeyType {
   return 'desconhecida';
 }
 
-function extractPixInfo(text: string): PixInfo | undefined {
-  const pixMarker = text.match(/chave\s+pix\s*[:\-]?\s*([^\s,;]+)/i);
+function isRepeatedDigits(value: string): boolean {
+  return /^([0-9])\1+$/.test(value);
+}
 
-  if (!pixMarker?.[1]) {
-    return undefined;
+function calculateDigit(value: string, weights: number[]): number {
+  const sum = value
+    .split('')
+    .reduce((total, digit, index) => total + Number(digit) * (weights[index] ?? 0), 0);
+  const remainder = sum % 11;
+  return remainder < 2 ? 0 : 11 - remainder;
+}
+
+function isValidCpf(value: string): boolean {
+  if (value.length !== 11 || isRepeatedDigits(value)) {
+    return false;
   }
 
-  const candidate = pixMarker[1].replace(/[.!?)}\]]+$/, '');
+  const firstDigit = calculateDigit(value.slice(0, 9), [10, 9, 8, 7, 6, 5, 4, 3, 2]);
+  const secondDigit = calculateDigit(value.slice(0, 9) + firstDigit, [11, 10, 9, 8, 7, 6, 5, 4, 3, 2]);
 
+  return value === value.slice(0, 9) + firstDigit + secondDigit;
+}
+
+function isValidCnpj(value: string): boolean {
+  if (value.length !== 14 || isRepeatedDigits(value)) {
+    return false;
+  }
+
+  const firstDigit = calculateDigit(value.slice(0, 12), [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  const secondDigit = calculateDigit(value.slice(0, 12) + firstDigit, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+
+  return value === value.slice(0, 12) + firstDigit + secondDigit;
+}
+
+function isRawPixKey(text: string): boolean {
+  const trimmedText = text.trim();
+  const keyType = getPixKeyType(trimmedText);
+
+  return (
+    emailPattern.test(trimmedText) ||
+    randomKeyPattern.test(trimmedText) ||
+    keyType === 'cpf' ||
+    keyType === 'cnpj'
+  );
+}
+
+function createPixInfo(
+  candidate: string,
+  merchantName: string | null = null,
+  value: number | null = null,
+  merchantCity: string | null = null,
+): PixInfo {
   return {
     keyType: getPixKeyType(candidate),
     maskedKey: maskKey(candidate),
-    statedBeneficiary: null,
-    value: null,
+    statedBeneficiary: merchantName,
+    value,
+    merchantCity,
   };
+}
+
+function extractPixInfo(text: string, origin: InputOrigin): PixInfo | undefined {
+  if (origin === 'qrCode') {
+    const parsedPayload = parsePixPayload(text);
+
+    if (parsedPayload?.key) {
+      return createPixInfo(
+        parsedPayload.key,
+        parsedPayload.merchantName,
+        parsedPayload.value,
+        parsedPayload.merchantCity,
+      );
+    }
+  }
+
+  const pixMarker = text.match(/chave\s+pix\s*[:\-]?\s*([^\s,;]+)/i);
+  const candidate = pixMarker?.[1] ?? (isRawPixKey(text) ? text.trim() : null);
+
+  if (!candidate) {
+    return undefined;
+  }
+
+  return createPixInfo(candidate.replace(/[.!?)}\]]+$/, ''));
 }
 
 function detectType(
@@ -122,7 +191,7 @@ export interface ExtractedEntities {
 
 export function extractEntities(text: string, origin: InputOrigin): ExtractedEntities {
   const url = extractUrl(text);
-  const pix = extractPixInfo(text);
+  const pix = extractPixInfo(text, origin);
   const type = detectType(text, origin, url, pix);
 
   return {

@@ -17,6 +17,9 @@ const typeLabels = {
   qrCode: 'QR Code',
 } as const;
 
+const formatPixValue = (value: number) =>
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
 export default function ReviewScreen() {
   const router = useRouter();
   const analysis = useAnalysisStore((state) => state.currentAnalysis);
@@ -64,6 +67,27 @@ export default function ReviewScreen() {
               <Text allowFontScaling style={styles.detailLabel}>Chave Pix</Text>
               <Text allowFontScaling style={styles.detailValue}>{analysis.input.pix.maskedKey}</Text>
               <Text allowFontScaling style={styles.detailMeta}>{analysis.input.pix.keyType}</Text>
+            </View>
+          ) : null}
+
+          {analysis.input.pix?.statedBeneficiary ? (
+            <View style={styles.detailRow}>
+              <Text allowFontScaling style={styles.detailLabel}>Beneficiário informado no QR Code</Text>
+              <Text allowFontScaling style={styles.detailValue}>{analysis.input.pix.statedBeneficiary}</Text>
+            </View>
+          ) : null}
+
+          {analysis.input.pix?.value !== null && analysis.input.pix?.value !== undefined ? (
+            <View style={styles.detailRow}>
+              <Text allowFontScaling style={styles.detailLabel}>Valor informado</Text>
+              <Text allowFontScaling style={styles.detailValue}>{formatPixValue(analysis.input.pix.value)}</Text>
+            </View>
+          ) : null}
+
+          {analysis.input.pix?.merchantCity ? (
+            <View style={styles.detailRow}>
+              <Text allowFontScaling style={styles.detailLabel}>Cidade informada</Text>
+              <Text allowFontScaling style={styles.detailValue}>{analysis.input.pix.merchantCity}</Text>
             </View>
           ) : null}
 

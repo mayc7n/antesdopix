@@ -39,6 +39,7 @@ export interface PixInfo {
   maskedKey: string;
   statedBeneficiary: string | null;
   value: number | null;
+  merchantCity: string | null;
 }
 
 export interface AnalysisInput {
