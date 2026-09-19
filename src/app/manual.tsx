@@ -33,6 +33,11 @@ export default function ManualScreen() {
     router.push('/review');
   };
 
+  const handleClearInput = () => {
+    setText('');
+    setError(null);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -62,6 +67,15 @@ export default function ManualScreen() {
             <Text allowFontScaling style={styles.counter}>{text.length}/5000</Text>
           </View>
         </View>
+
+        {text.length > 0 ? (
+          <AppButton
+            label="Limpar campo"
+            icon="close-circle-outline"
+            variant="quiet"
+            onPress={handleClearInput}
+          />
+        ) : null}
 
         {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
 
