@@ -4,8 +4,10 @@ import { ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppButton } from '@/components/AppButton';
+import { NextStepsCard } from '@/components/NextStepsCard';
 import { RiskBadge } from '@/components/RiskBadge';
 import { SignalCard } from '@/components/SignalCard';
+import { getNextSteps } from '@/domain/analysis/nextSteps';
 import { formatAnalysisSummary } from '@/share/formatAnalysisSummary';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
@@ -71,6 +73,8 @@ export default function ResultScreen() {
           ))}
         </View>
 
+        <NextStepsCard steps={getNextSteps(analysis.result.level)} />
+
         <AppButton
           label="Ver detalhes dos sinais"
           icon="information-circle-outline"
@@ -83,7 +87,7 @@ export default function ResultScreen() {
           variant="secondary"
           onPress={handleShareSummary}
         />
-        <AppButton label="Fazer nova análise" icon="refresh-outline" onPress={handleNewAnalysis} />
+        <AppButton label="Conferir outro conteúdo" icon="refresh-outline" onPress={handleNewAnalysis} />
         <AppButton
           label="Denunciar golpe"
           icon="megaphone-outline"

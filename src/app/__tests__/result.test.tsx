@@ -5,13 +5,18 @@ import { analyzeInput } from '@/domain/analysis/analyzeInput';
 import { useAnalysisStore } from '@/state/analysisStore';
 import ResultScreen from '../result';
 
+const mockPush = jest.fn();
+const mockReplace = jest.fn();
+
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ push: jest.fn(), replace: jest.fn() }),
+  useRouter: () => ({ push: mockPush, replace: mockReplace }),
 }));
 
 describe('ResultScreen', () => {
   afterEach(() => {
     jest.restoreAllMocks();
+    mockPush.mockClear();
+    mockReplace.mockClear();
   });
 
   afterEach(async () => {
@@ -37,5 +42,19 @@ describe('ResultScreen', () => {
     });
     expect(shareSpy.mock.calls[0]?.[0].message).not.toContain(originalMessage);
     expect(screen.queryByText(originalMessage)).toBeNull();
+  });
+
+  it('limpa a análise e inicia outra conferência', async () => {
+    useAnalysisStore
+      .getState()
+      .setAnalysis(analyzeInput('Pague agora para resgatar seu prêmio.', 'manual'));
+
+    const screen = await render(<ResultScreen />);
+
+    expect(screen.getByText('O que fazer agora')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Conferir outro conteúdo' }));
+
+    expect(mockReplace).toHaveBeenCalledWith('/');
+    expect(useAnalysisStore.getState().currentAnalysis).toBeNull();
   });
 });
