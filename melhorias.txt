@@ -1,0 +1,44 @@
+ANTES DO PIX — CONTINUAÇÃO
+
+Estado salvo em 19/09/2026
+- Branch: main
+- Último commit remoto: 85aeeea53abee1daf1b1754e8f962a52607ecc07
+- Worktree: quinta melhoria não iniciada; não há commit pendente desta etapa.
+- Último gate validado: npm run check — 14 suítes, 36 testes, typecheck aprovado.
+
+Melhorias já publicadas
+1. 6ade51d feat(pix): interpretar chaves e QR Codes
+   - valida CPF/CNPJ;
+   - diferencia telefone usado explicitamente como chave Pix;
+   - interpreta QR Code Pix estático localmente;
+   - exibe chave mascarada, beneficiário, valor e cidade.
+
+2. 6876350 fix(home): orientar compartilhamento
+   - troca affordance confusa por instruções reais de compartilhamento nativo.
+
+3. f68ca9e feat(scanner): confirmar leitura do QR
+   - adiciona fechar scanner;
+   - mostra confirmação visual após leitura;
+   - exige toque em “Conferir QR Code”.
+
+4. 85aeeea fix(a11y): respeitar movimento reduzido
+   - remove escala do pressed-state quando sistema usa redução de movimento.
+
+Próxima melhoria
+5. Cobertura dos fluxos nativos já implementados
+   - adicionar teste do botão “Compartilhar resumo” e verificar que Share.share recebe resumo sem texto original;
+   - adicionar teste do botão “Abrir orientações do Banco Central” e verificar URL oficial;
+   - executar npm run check e git diff --check;
+   - commit PT-BR focado e push para main;
+   - confirmar com git ls-remote origin refs/heads/main.
+
+Depois
+- QA físico Android e iOS: compartilhamento recebido, permissões, QR inválido, câmera, TalkBack, VoiceOver e fonte ampliada.
+- Expandir regras de risco com testes contra falsos positivos.
+- Onboarding curto sobre limites, privacidade e confirmação no banco.
+
+Ao retomar
+1. git status --short --branch
+2. git log -1 --oneline
+3. ler este arquivo
+4. executar somente a melhoria 5 acima antes de abrir outra frente.
