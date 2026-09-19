@@ -7,8 +7,11 @@ import { AppButton } from '@/components/AppButton';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 
-const futureMessage = (feature: string) =>
-  Alert.alert('Estamos preparando esta etapa', `${feature} estará disponível em uma próxima atualização.`);
+const showShareInstructions = () =>
+  Alert.alert(
+    'Como compartilhar',
+    'Em outro aplicativo, toque em Compartilhar e selecione Antes do Pix. A mensagem será analisada neste aparelho, sem iniciar pagamento.',
+  );
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -46,10 +49,10 @@ export default function HomeScreen() {
           <Text allowFontScaling style={styles.actionTitle}>Como você recebeu isso?</Text>
           <AppButton label="Colar mensagem" icon="clipboard-outline" onPress={() => router.push('/manual')} />
           <AppButton
-            label="Compartilhar mensagem"
+            label="Como compartilhar"
             icon="share-social-outline"
             variant="secondary"
-            onPress={() => futureMessage('O compartilhamento nativo já está disponível; selecione o Antes do Pix no menu de outro app.')}
+            onPress={showShareInstructions}
           />
           <AppButton
             label="Inserir link, telefone ou chave Pix"
