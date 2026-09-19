@@ -44,6 +44,8 @@ npm run check
 - O texto bruto não é enviado para servidor nem escrito em logs.
 - A análise atual não é persistida e pode ser apagada pelo usuário.
 - O resultado compartilhável não inclui a mensagem original por padrão.
+- A área de transferência só é lida após um toque explícito em “Colar da área de transferência”.
+- O resumo pode ser copiado sem incluir a mensagem original.
 - O scanner solicita somente câmera na etapa própria; o app não usa contatos, localização ou microfone.
 
 ## Limites importantes

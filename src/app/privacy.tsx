@@ -12,6 +12,7 @@ const privacyItems = [
   'A análise acontece somente neste aparelho.',
   'O texto original não é enviado para um servidor.',
   'Não criamos histórico das suas análises.',
+  'A área de transferência só é lida quando você toca em colar.',
   'O app não acessa banco, carteira, contatos, localização ou microfone.',
 ];
 

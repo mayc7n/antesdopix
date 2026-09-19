@@ -1,9 +1,12 @@
+import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Alert, Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppButton } from '@/components/AppButton';
+import { analyzeInput } from '@/domain/analysis/analyzeInput';
+import { useAnalysisStore } from '@/state/analysisStore';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 
@@ -15,6 +18,29 @@ const showShareInstructions = () =>
 
 export default function HomeScreen() {
   const router = useRouter();
+  const setAnalysis = useAnalysisStore((state) => state.setAnalysis);
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const clipboardText = (await Clipboard.getStringAsync()).trim();
+
+      if (!clipboardText) {
+        Alert.alert(
+          'Área de transferência vazia',
+          'Copie uma mensagem, link ou chave Pix antes de tentar novamente.',
+        );
+        return;
+      }
+
+      setAnalysis(analyzeInput(clipboardText, 'colar'));
+      router.push('/review');
+    } catch {
+      Alert.alert(
+        'Não foi possível colar',
+        'Tente copiar o conteúdo novamente ou use a entrada manual.',
+      );
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -47,7 +73,11 @@ export default function HomeScreen() {
 
         <View style={styles.actionCard}>
           <Text allowFontScaling style={styles.actionTitle}>Como você recebeu isso?</Text>
-          <AppButton label="Colar mensagem" icon="clipboard-outline" onPress={() => router.push('/manual')} />
+          <AppButton
+            label="Colar da área de transferência"
+            icon="clipboard-outline"
+            onPress={() => void handlePasteFromClipboard()}
+          />
           <AppButton
             label="Como compartilhar"
             icon="share-social-outline"

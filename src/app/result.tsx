@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
-import { ScrollView, Share, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppButton } from '@/components/AppButton';
@@ -30,6 +31,15 @@ export default function ResultScreen() {
 
   const handleShareSummary = () => {
     void Share.share({ message: formatAnalysisSummary(analysis) });
+  };
+
+  const handleCopySummary = async () => {
+    try {
+      await Clipboard.setStringAsync(formatAnalysisSummary(analysis));
+      Alert.alert('Resumo copiado', 'O resumo foi copiado sem a mensagem original.');
+    } catch {
+      Alert.alert('Não foi possível copiar', 'Tente novamente ou use o compartilhamento nativo.');
+    }
   };
 
   return (
@@ -86,6 +96,12 @@ export default function ResultScreen() {
           icon="share-social-outline"
           variant="secondary"
           onPress={handleShareSummary}
+        />
+        <AppButton
+          label="Copiar resumo"
+          icon="copy-outline"
+          variant="secondary"
+          onPress={() => void handleCopySummary()}
         />
         <AppButton label="Conferir outro conteúdo" icon="refresh-outline" onPress={handleNewAnalysis} />
         <AppButton

@@ -1,9 +1,15 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Share } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
+import { Alert, Share } from 'react-native';
 
 import { analyzeInput } from '@/domain/analysis/analyzeInput';
 import { useAnalysisStore } from '@/state/analysisStore';
 import ResultScreen from '../result';
+
+jest.mock('expo-clipboard', () => ({
+  getStringAsync: jest.fn(),
+  setStringAsync: jest.fn(),
+}));
 
 const mockPush = jest.fn();
 const mockReplace = jest.fn();
@@ -56,5 +62,24 @@ describe('ResultScreen', () => {
 
     expect(mockReplace).toHaveBeenCalledWith('/');
     expect(useAnalysisStore.getState().currentAnalysis).toBeNull();
+  });
+
+  it('copia somente o resumo sanitizado', async () => {
+    const copySpy = jest.spyOn(Clipboard, 'setStringAsync').mockResolvedValue(true);
+    jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
+    const originalMessage = 'Pague agora para resgatar seu prêmio.';
+
+    useAnalysisStore
+      .getState()
+      .setAnalysis(analyzeInput(originalMessage, 'manual'));
+
+    const screen = await render(<ResultScreen />);
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Copiar resumo' }));
+
+    expect(copySpy).toHaveBeenCalledWith(
+      expect.stringContaining('Antes do Pix — resumo da análise'),
+    );
+    expect(copySpy.mock.calls[0]?.[0]).not.toContain(originalMessage);
   });
 });
