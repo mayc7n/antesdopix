@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
+import { Linking } from 'react-native';
 
 import ReportScreen from '../report';
 
@@ -7,6 +8,10 @@ jest.mock('expo-router', () => ({
 }));
 
 describe('ReportScreen', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('orienta a pessoa sem fingir que registrou uma denúncia', async () => {
     const screen = await render(<ReportScreen />);
 
@@ -15,5 +20,16 @@ describe('ReportScreen', () => {
     expect(screen.getByText('Entre imediatamente em contato com seu banco.')).toBeTruthy();
     expect(screen.getByText('Se houve transferência, solicite contestação e o MED.')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Abrir orientações do Banco Central' })).toBeTruthy();
+  });
+
+  it('abre a página oficial de segurança do Pix do Banco Central', async () => {
+    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    const screen = await render(<ReportScreen />);
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Abrir orientações do Banco Central' }));
+
+    expect(openURLSpy).toHaveBeenCalledWith(
+      'https://www.bcb.gov.br/estabilidadefinanceira/pix-seguranca',
+    );
   });
 });
