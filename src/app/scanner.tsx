@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -24,8 +25,9 @@ export default function ScannerScreen() {
 
     setHasScanned(true);
     setAnalysis(analyzeInput(data, 'qrCode'));
-    router.push('/review');
   };
+
+  const handleClose = () => router.replace('/');
 
   if (!permission) {
     return (
@@ -66,20 +68,47 @@ export default function ScannerScreen() {
         style={StyleSheet.absoluteFill}
       />
       <View style={styles.cameraOverlay}>
-        <Text allowFontScaling style={styles.cameraTitle}>Aponte para o QR Code</Text>
+        <View style={styles.cameraTopBar}>
+          <AppButton
+            label="Fechar scanner"
+            icon="close-outline"
+            variant="secondary"
+            onPress={handleClose}
+          />
+        </View>
+        <Text allowFontScaling style={styles.cameraTitle}>
+          {hasScanned ? 'QR Code encontrado' : 'Aponte para o QR Code'}
+        </Text>
         <View style={styles.scanFrame}>
           <View style={[styles.corner, styles.topLeft]} />
           <View style={[styles.corner, styles.topRight]} />
           <View style={[styles.corner, styles.bottomLeft]} />
           <View style={[styles.corner, styles.bottomRight]} />
         </View>
-        <Text allowFontScaling style={styles.cameraHint}>Mantenha o código inteiro dentro da moldura.</Text>
-        <AppButton
-          label={isTorchEnabled ? 'Desligar lanterna' : 'Ligar lanterna'}
-          icon="flashlight-outline"
-          variant="secondary"
-          onPress={() => setIsTorchEnabled((enabled) => !enabled)}
-        />
+        {hasScanned ? (
+          <View style={styles.foundCard} accessible accessibilityRole="text">
+            <Ionicons name="checkmark-circle-outline" size={22} color={colors.emerald} />
+            <Text allowFontScaling style={styles.foundText}>
+              Confira os dados encontrados antes de continuar.
+            </Text>
+          </View>
+        ) : (
+          <Text allowFontScaling style={styles.cameraHint}>Mantenha o código inteiro dentro da moldura.</Text>
+        )}
+        {hasScanned ? (
+          <AppButton
+            label="Conferir QR Code"
+            icon="arrow-forward-outline"
+            onPress={() => router.push('/review')}
+          />
+        ) : (
+          <AppButton
+            label={isTorchEnabled ? 'Desligar lanterna' : 'Ligar lanterna'}
+            icon="flashlight-outline"
+            variant="secondary"
+            onPress={() => setIsTorchEnabled((enabled) => !enabled)}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -147,6 +176,10 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
     backgroundColor: '#00000055',
   },
+  cameraTopBar: {
+    width: '100%',
+    alignItems: 'flex-start',
+  },
   cameraTitle: {
     color: colors.white,
     fontSize: 22,
@@ -196,5 +229,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 21,
     textAlign: 'center',
+  },
+  foundCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    width: '100%',
+    padding: spacing.md,
+    borderRadius: 18,
+    backgroundColor: '#122A2A',
+    borderWidth: 1,
+    borderColor: '#20504A',
+  },
+  foundText: {
+    flex: 1,
+    color: colors.white,
+    fontSize: 15,
+    lineHeight: 21,
   },
 });
