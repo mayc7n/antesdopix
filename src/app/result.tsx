@@ -5,6 +5,7 @@ import { Alert, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppButton } from '@/components/AppButton';
+import { ConfirmationChecklist } from '@/components/ConfirmationChecklist';
 import { NextStepsCard } from '@/components/NextStepsCard';
 import { RiskBadge } from '@/components/RiskBadge';
 import { SignalCard } from '@/components/SignalCard';
@@ -84,6 +85,7 @@ export default function ResultScreen() {
         </View>
 
         <NextStepsCard steps={getNextSteps(analysis.result.level)} />
+        <ConfirmationChecklist />
 
         <AppButton
           label="Ver detalhes dos sinais"

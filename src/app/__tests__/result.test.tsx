@@ -82,4 +82,15 @@ describe('ResultScreen', () => {
     );
     expect(copySpy.mock.calls[0]?.[0]).not.toContain(originalMessage);
   });
+
+  it('exibe uma checklist temporária antes do pagamento', async () => {
+    useAnalysisStore
+      .getState()
+      .setAnalysis(analyzeInput('Confira o valor desta cobrança.', 'manual'));
+
+    const screen = await render(<ResultScreen />);
+
+    expect(screen.getByText('Checklist antes de pagar')).toBeTruthy();
+    expect(screen.getByRole('checkbox', { name: 'Conferi o beneficiário no banco' })).toBeTruthy();
+  });
 });
