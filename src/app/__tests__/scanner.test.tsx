@@ -58,4 +58,28 @@ describe('ScannerScreen', () => {
     expect(screen.getByRole('button', { name: 'Conferir QR Code' })).toBeTruthy();
     expect(mockPush).not.toHaveBeenCalled();
   });
+
+  it('ignora uma leitura vazia', async () => {
+    mockPermission.granted = true;
+    const screen = await render(<ScannerScreen />);
+
+    await fireEvent(screen.getByTestId('camera-view'), 'barcodeScanned', { data: '   ' });
+
+    expect(useAnalysisStore.getState().currentAnalysis).toBeNull();
+    expect(mockPush).not.toHaveBeenCalled();
+    expect(screen.queryByText('QR Code encontrado')).toBeNull();
+  });
+
+  it('orienta quando o QR Code não é um Pix ou link conferível', async () => {
+    mockPermission.granted = true;
+    const screen = await render(<ScannerScreen />);
+
+    await fireEvent(screen.getByTestId('camera-view'), 'barcodeScanned', {
+      data: 'codigo-sem-formato-pix',
+    });
+
+    expect(screen.getByText('Este QR Code não parece ser um Pix ou link conferível.')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Conferir QR Code' })).toBeNull();
+    expect(useAnalysisStore.getState().currentAnalysis).toBeNull();
+  });
 });

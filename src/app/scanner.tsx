@@ -16,6 +16,7 @@ export default function ScannerScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [isTorchEnabled, setIsTorchEnabled] = useState(false);
   const [hasScanned, setHasScanned] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
   const setAnalysis = useAnalysisStore((state) => state.setAnalysis);
 
   const handleBarcodeScanned = ({ data }: BarcodeScanningResult) => {
@@ -23,8 +24,16 @@ export default function ScannerScreen() {
       return;
     }
 
+    const analysis = analyzeInput(data, 'qrCode');
+
+    if (!analysis.input.pix && !analysis.input.url) {
+      setScanError('Este QR Code não parece ser um Pix ou link conferível.');
+      return;
+    }
+
+    setScanError(null);
     setHasScanned(true);
-    setAnalysis(analyzeInput(data, 'qrCode'));
+    setAnalysis(analysis);
   };
 
   const handleClose = () => router.replace('/');
@@ -95,6 +104,11 @@ export default function ScannerScreen() {
         ) : (
           <Text allowFontScaling style={styles.cameraHint}>Mantenha o código inteiro dentro da moldura.</Text>
         )}
+        {scanError ? (
+          <Text accessibilityRole="alert" allowFontScaling style={styles.scanError}>
+            {scanError}
+          </Text>
+        ) : null}
         {hasScanned ? (
           <AppButton
             label="Conferir QR Code"
@@ -228,6 +242,13 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 15,
     lineHeight: 21,
+    textAlign: 'center',
+  },
+  scanError: {
+    color: colors.coral,
+    fontSize: 15,
+    lineHeight: 21,
+    fontWeight: '700',
     textAlign: 'center',
   },
   foundCard: {
