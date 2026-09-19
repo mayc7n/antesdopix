@@ -3,8 +3,35 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
-type ButtonVariant = 'primary' | 'secondary' | 'quiet';
+export type ButtonVariant = 'primary' | 'secondary' | 'quiet';
+
+interface AppButtonStyleOptions {
+  variant: ButtonVariant;
+  pressed: boolean;
+  disabled: boolean;
+  reducedMotion: boolean;
+}
+
+export function getAppButtonStyles({
+  variant,
+  pressed,
+  disabled,
+  reducedMotion,
+}: AppButtonStyleOptions) {
+  const isPrimary = variant === 'primary';
+  const isQuiet = variant === 'quiet';
+
+  return [
+    styles.button,
+    isPrimary && styles.primaryButton,
+    variant === 'secondary' && styles.secondaryButton,
+    isQuiet && styles.quietButton,
+    pressed && !disabled && !reducedMotion && styles.pressed,
+    disabled && styles.disabled,
+  ];
+}
 
 interface AppButtonProps {
   label: string;
@@ -25,6 +52,7 @@ export function AppButton({
 }: AppButtonProps) {
   const isPrimary = variant === 'primary';
   const isQuiet = variant === 'quiet';
+  const reducedMotion = useReducedMotion();
 
   return (
     <Pressable
@@ -34,14 +62,9 @@ export function AppButton({
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.button,
-        isPrimary && styles.primaryButton,
-        variant === 'secondary' && styles.secondaryButton,
-        isQuiet && styles.quietButton,
-        pressed && !disabled && styles.pressed,
-        disabled && styles.disabled,
-      ]}
+      style={({ pressed }) =>
+        getAppButtonStyles({ variant, pressed, disabled, reducedMotion })
+      }
     >
       {icon ? (
         <Ionicons
